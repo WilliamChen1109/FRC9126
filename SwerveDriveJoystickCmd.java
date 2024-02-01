@@ -23,10 +23,30 @@ public class SwerveDriveJoystickCmd extends Command{
         this.rot_spd = rot_spd;
         this.fieldOriented = fieldOriented;
 
-        xLimiter = new SlewRateLimiter(3);
-        yLimiter = new SlewRateLimiter(3);
-        rotLimiter = new SlewRateLimiter(3);
-        
+        xLimiter = new SlewRateLimiter(3); // m/s
+        yLimiter = new SlewRateLimiter(3); // m/s
+        rotLimiter = new SlewRateLimiter(3); //rad/s
+
         addRequirements(swerveSubsystem);
+    }
+
+    @Override
+    public void initialize() {
+        System.out.println("SwerveDriveJoystickCmd Start");
+    }
+
+    @Override
+    public void execute(){
+
+    }
+
+    @Override
+    public void end(boolean interrupted){
+        System.out.println("SwerveDriveJoystickCmd End");
+    }
+
+    @Override
+    public boolean isFinished(){
+        return false;
     }
 }
