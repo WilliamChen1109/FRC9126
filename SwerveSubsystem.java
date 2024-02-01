@@ -1,14 +1,19 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrain.SwerveDriveState;
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
-public class SwerveSubsystem {
+public class SwerveSubsystem extends SubsystemBase{
     private final SwerveModule frontLeft = new SwerveModule(
             Constants.DriveConstants.kFrontLeftDriveMotorPort,
             Constants.DriveConstants.kFrontLeftTurningMotorPort, 
@@ -78,5 +83,36 @@ public class SwerveSubsystem {
         return odometer.getPoseMeters();
     }
 
-    
+    public SwerveModulePosition[] getModulePositions(){
+        return new SwerveModulePosition[]{
+            frontLeft.getPosition(), 
+            frontRight.getPosition(),
+            backLeft.getPosition(),
+            backRight.getPosition()
+        };
+    }
+
+    public void resetOdometry(Pose2d pose){
+        odometer.resetPosition(getRotation2d(), getModulePositions(), pose);
+    }
+
+    public void stopModules(){
+        frontLeft.stop();
+        frontRight.stop();
+        backLeft.stop();
+        backRight.stop();
+    }
+
+    public void setModuleStates(SwerveModuleState[] desireStates){
+        SwerveDriveKinematics.desaturateWheelSpeeds(desireStates, 1d); // 會影響到速度上限
+        frontLeft.setDesiredState(desireStates[0]);
+        frontRight.setDesiredState(desireStates[1]);
+        backLeft.setDesiredState(desireStates[2]);
+        backRight.setDesiredState(desireStates[3]);
+    }
+
+    @Override
+    public void periodic(){
+        
+    }
 }
