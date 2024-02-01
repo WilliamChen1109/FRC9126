@@ -2,6 +2,9 @@ package frc.robot.subsystems;
 
 import com.kauailabs.navx.frc.AHRS;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.wpilibj.SPI;
 import frc.robot.Constants;
 
@@ -45,6 +48,8 @@ public class SwerveSubsystem {
 
     private final AHRS gyro = new AHRS();
 
+    private final SwerveDriveOdometry odometer = new SwerveDriveOdometry(null, null, null);
+
     public SwerveSubsystem() {
         new Thread(() -> {
             try {
@@ -58,5 +63,20 @@ public class SwerveSubsystem {
 
     public void zeroHeading(){
         gyro.reset();
+        //gyro.zeroYaw();
     }
+
+    public double getHeading(){
+        return Math.IEEEremainder(gyro.getAngle(), 360);
+    }
+
+    public Rotation2d getRotation2d(){
+        return new Rotation2d(getHeading());
+    }
+
+    public Pose2d getPose(){
+        return odometer.getPoseMeters();
+    }
+
+    
 }
