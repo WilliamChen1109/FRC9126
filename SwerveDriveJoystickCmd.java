@@ -37,6 +37,14 @@ public class SwerveDriveJoystickCmd extends Command{
 
     @Override
     public void execute(){
+        double y = y_spd.get();
+        double x = x_spd.get();
+        double rot = rot_spd.get();
+        
+        y = yLimiter.calculate(y);
+        x = xLimiter.calculate(x);
+        rot = rotLimiter.calculate(rot);
+
 
     }
 
