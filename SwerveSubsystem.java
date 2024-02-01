@@ -55,4 +55,8 @@ public class SwerveSubsystem {
             }
         }).start();
     }
+
+    public void zeroHeading(){
+        gyro.reset();
+    }
 }
