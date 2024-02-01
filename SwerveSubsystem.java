@@ -113,6 +113,15 @@ public class SwerveSubsystem extends SubsystemBase{
 
     @Override
     public void periodic(){
-        
+        odometer.update(getRotation2d(), getModulePositions());
+    }
+
+    public double[] getModuleAbsoluteEncoderRad(){
+        return new double[]{
+            frontLeft.getAbsoluteEncoderRad(),
+            frontRight.getAbsoluteEncoderRad(),
+            backLeft.getAbsoluteEncoderRad(),
+            backRight.getAbsoluteEncoderRad()
+        };
     }
 }
