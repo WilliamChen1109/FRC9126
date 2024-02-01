@@ -1,40 +1,35 @@
-package frc.robot.subsystems;
+package frc.robot;
 
-import com.ctre.phoenix6.hardware.CANcoder;
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.RelativeEncoder;
-import com.revrobotics.CANSparkLowLevel.MotorType;
+import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.XboxController.Button;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.commands.SwerveDriveJoystickCmd;
+import frc.robot.subsystems.SwerveSubsystem;
 
-import edu.wpi.first.math.controller.PIDController;
+public class RobotContainer {
+  private final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
 
-public class SwerveModule {
-    private final CANSparkMax driveMotor;
-    private final CANSparkMax turningMotor;
+  private final XboxController stick = new XboxController(0);
 
-    private final RelativeEncoder driveEncoder;
-    private final RelativeEncoder turningEncoder;
-    
-    private final PIDController turningPIDController; //PID控制器
+  public RobotContainer() {
+    swerveSubsystem.setDefaultCommand(
+      new SwerveDriveJoystickCmd(swerveSubsystem,
+        () -> stick.getLeftY(),
+        () -> stick.getLeftX(),
+        () -> stick.getRightX(),
+        () -> !stick.getAButton())
+    );
+    configureBindings();
+  }
 
-    private final CANcoder cancoder;
+  // 按鈕控制
+  private void configureBindings() {
+    new JoystickButton(stick, Button.kB.value).onTrue(new InstantCommand(() -> swerveSubsystem.zeroHeading()));
+  }
 
-    private final boolean absoluteEncoderReversed;
-    private final double absoluteEncoderOffsetRad; //Radians
-
-    public SwerveModule(int driveMotorID, int turningMotorID, boolean driveMotorReversed, boolean turningMotorReversed,
-     int absoluteEncoderID, double absoluteEncoderOffset, boolean absoluteEncoderReversed){
-        driveMotor = new CANSparkMax(driveMotorID, MotorType.kBrushless);
-        turningMotor = new CANSparkMax(turningMotorID, MotorType.kBrushless);
-
-        this.absoluteEncoderReversed = absoluteEncoderReversed;
-        this.absoluteEncoderOffsetRad = absoluteEncoderOffset;
-
-        driveMotor.setInverted(driveMotorReversed);
-        turningMotor.setInverted(turningMotorReversed);
-
-        driveEncoder = driveMotor.getEncoder();
-        turningEncoder = turningMotor.getEncoder();
-
-        turningPIDController = new PIDController(1, 0, 0);
-    }
+  public Command getAutonomousCommand() {
+    return null;
+  }
 }
