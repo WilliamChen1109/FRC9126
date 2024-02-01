@@ -1,5 +1,8 @@
 package frc.robot.subsystems;
 
+import com.kauailabs.navx.frc.AHRS;
+
+import edu.wpi.first.wpilibj.SPI;
 import frc.robot.Constants;
 
 public class SwerveSubsystem {
@@ -33,9 +36,23 @@ public class SwerveSubsystem {
     private final SwerveModule backRight = new SwerveModule(
             Constants.DriveConstants.kBackRightDriveMotorPort,
             Constants.DriveConstants.kBackRightTurningMotorPort, 
+
             Constants.DriveConstants.kBackRightDriveEncoderReversed, 
             Constants.DriveConstants.kBackRightTurningEncoderReversed, 
             Constants.DriveConstants.kBackRightDriveAbsoluteEncoderPort, 
             Constants.DriveConstants.kBackRightAbsoluteEncoderOffsetRad, 
             Constants.DriveConstants.kBackRightAbsoluteEncoderReversed);
+
+    private final AHRS gyro = new AHRS();
+
+    public SwerveSubsystem() {
+        new Thread(() -> {
+            try {
+                Thread.sleep(1000);
+                zeroHeading();
+            } catch (Exception e){
+
+            }
+        }).start();
+    }
 }
