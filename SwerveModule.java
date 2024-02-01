@@ -27,6 +27,9 @@ public class SwerveModule {
         driveMotor = new CANSparkMax(driveMotorID, MotorType.kBrushless);
         turningMotor = new CANSparkMax(turningMotorID, MotorType.kBrushless);
 
+        driveMotor.restoreFactoryDefaults();
+        turningMotor.restoreFactoryDefaults();
+
         this.absoluteEncoderReversed = absoluteEncoderReversed;
         this.absoluteEncoderOffsetRad = absoluteEncoderOffset;
 
@@ -45,5 +48,38 @@ public class SwerveModule {
         turningEncoder.setVelocityConversionFactor(Constants.ModuleConstants.kTurningEncoderRot2RadPerSec);
 
         cancoder = new CANcoder(absoluteEncoderID);
+
+        driveMotor.burnFlash();
+        turningMotor.burnFlash();
+
+        resetEncoder();
+    }
+
+    public void resetEncoder(){
+        turningEncoder.setPosition(getAbsoluteEncoderRad());
+    }
+
+    public double getAbsoluteEncoderRad(){
+        double angle = cancoder.getAbsolutePosition().getValue();
+        angle /= (Math.PI*2); // angle = angle / (Math.PI*2)
+        angle -= absoluteEncoderOffsetRad;
+        angle = angle * (absoluteEncoderReversed ? -1 : 1);
+        return angle;
+    }
+
+    public double getDrivePosition(){
+        return driveEncoder.getPosition();
+    }
+
+    public double getDriveVelocity(){
+        return driveEncoder.getVelocity();
+    }
+
+    public double getTurningPosition(){
+        return turningEncoder.getPosition();
+    }
+
+    public double getTurningVelocity(){
+        return turningEncoder.getVelocity();
     }
 }
