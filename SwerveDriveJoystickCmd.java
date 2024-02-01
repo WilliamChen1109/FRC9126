@@ -62,6 +62,7 @@ public class SwerveDriveJoystickCmd extends Command{
 
         SwerveModuleState[] swerveModuleStates = DriveConstants.kSwerveKinematics.toSwerveModuleStates(chassisSpeeds);
         swerveSubsystem.setModuleStates(swerveModuleStates);
+        printMoudleRadOffset();
     }
 
     @Override
@@ -72,5 +73,12 @@ public class SwerveDriveJoystickCmd extends Command{
     @Override
     public boolean isFinished(){
         return false;
+    }
+
+    private void printMoudleRadOffset(){
+        System.out.println("FrontLeft: " + swerveSubsystem.getModuleAbsoluteEncoderRad()[0]);
+        System.out.println("FrontRight: " + swerveSubsystem.getModuleAbsoluteEncoderRad()[1]);
+        System.out.println("BackLeft: " + swerveSubsystem.getModuleAbsoluteEncoderRad()[2]);
+        System.out.println("BackRight: " + swerveSubsystem.getModuleAbsoluteEncoderRad()[3]);
     }
 }
