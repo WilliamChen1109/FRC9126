@@ -6,6 +6,8 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import frc.robot.Constants;
 
 public class SwerveModule {
@@ -81,5 +83,14 @@ public class SwerveModule {
 
     public double getTurningVelocity(){
         return turningEncoder.getVelocity();
+    }
+
+    public void stop(){
+        driveMotor.stopMotor();
+        turningMotor.stopMotor();
+    }
+
+    public SwerveModulePosition getPosition(){
+        return new SwerveModulePosition(getDrivePosition(), new Rotation2d(getTurningPosition()));
     }
 }
